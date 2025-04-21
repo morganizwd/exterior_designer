@@ -9,6 +9,9 @@ import {
     deleteShop
 } from '../controllers/shopController.js';
 
+import { authMiddleware } from '../utils/authMiddleware.js';
+import { roleMiddleware } from '../utils/roleMiddleware.js';
+
 const router = express.Router();
 
 // Валидация
@@ -22,11 +25,36 @@ const idValidation = [
     param('id').isMongoId().withMessage('Неверный формат ID'),
 ];
 
-// Маршруты
-router.post('/', shopValidation, createShop);
+router.post(
+    '/',
+    authMiddleware,
+    roleMiddleware(['admin']),
+    shopValidation,
+    createShop
+);
+
 router.get('/', getShops);
-router.get('/:id', idValidation, getShopById);
-router.put('/:id', [...idValidation, ...shopValidation], updateShop);
-router.delete('/:id', idValidation, deleteShop);
+
+router.get(
+    '/:id',
+    idValidation,
+    getShopById
+);
+
+router.put(
+    '/:id',
+    authMiddleware,
+    roleMiddleware(['admin']),
+    [...idValidation, ...shopValidation],
+    updateShop
+);
+
+router.delete(
+    '/:id',
+    authMiddleware,
+    roleMiddleware(['admin']),
+    idValidation,
+    deleteShop
+);
 
 export default router;
