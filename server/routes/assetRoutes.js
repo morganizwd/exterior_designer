@@ -1,3 +1,4 @@
+// routes/assetRoutes.js
 import express from 'express';
 import { body, param } from 'express-validator';
 import {
@@ -7,6 +8,8 @@ import {
     updateAsset,
     deleteAsset
 } from '../controllers/assetController.js';
+import { authMiddleware } from '../utils/authMiddleware.js';
+import { roleMiddleware } from '../utils/roleMiddleware.js';
 
 const router = express.Router();
 
@@ -23,11 +26,32 @@ const assetValidation = [
 ];
 const idValidation = [param('id').isMongoId().withMessage('Неверный формат ID')];
 
-// Маршруты
-router.post('/', assetValidation, createAsset);
+// Только админ может создавать, обновлять и удалять ассеты
+router.post(
+    '/',
+    authMiddleware,
+    roleMiddleware(['admin']),
+    assetValidation,
+    createAsset
+);
+
 router.get('/', getAssets);
 router.get('/:id', idValidation, getAssetById);
-router.put('/:id', [...idValidation, ...assetValidation], updateAsset);
-router.delete('/:id', idValidation, deleteAsset);
+
+router.put(
+    '/:id',
+    authMiddleware,
+    roleMiddleware(['admin']),
+    [...idValidation, ...assetValidation],
+    updateAsset
+);
+
+router.delete(
+    '/:id',
+    authMiddleware,
+    roleMiddleware(['admin']),
+    idValidation,
+    deleteAsset
+);
 
 export default router;
