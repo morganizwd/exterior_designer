@@ -1,5 +1,7 @@
 import express from 'express';
 import mongoose from 'mongoose';
+import cors from 'cors';
+
 import userRoutes from './routes/userRoutes.js';
 import shopRoutes from './routes/shopRoutes.js';
 import projectRoutes from './routes/projectRoutes.js';
@@ -16,6 +18,7 @@ mongoose
 
 const app = express();
 app.use(express.json());
+app.use(cors());
 
 app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
 
@@ -32,4 +35,4 @@ app.use((err, req, res, next) => {
     res.status(500).json({ message: 'Unexpected server error' });
 });
 
-app.listen(3000, () => console.log('Server started on port 3000'));
+app.listen(5000, () => console.log('Server started on port 5000'));
