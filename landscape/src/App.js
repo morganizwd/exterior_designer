@@ -1,20 +1,23 @@
 // src/App.js
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Link, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import Header from './components/Header';
 import Auth from './components/Auth';
+import AdminPanel from './components/AdminPanel';
+import LandscapeEditor from './components/LandscapeEditor';
 
 function App() {
   return (
     <Router>
-      <nav className="main-nav">
-        <Link to="/">Главная</Link>
-        <Link to="/auth">Войти / Регистрация</Link>
-      </nav>
+      <Header />
+
       <Routes>
         <Route path="/auth" element={<Auth />} />
-        {/* Здесь другие маршруты вашего приложения */}
-        <Route path="/" element={<Navigate to="/auth" replace />} />
-        <Route path="*" element={<Navigate to="/" replace />} />
+        <Route path="/admin" element={<AdminPanel />} />
+        <Route path="/editor" element={<LandscapeEditor />} />
+        {/* Здесь можно добавить другие маршруты вашего приложения */}
+        <Route path="/editor" element={<Navigate to="/auth" replace />} />
+        <Route path="*" element={<Navigate to="/editor" replace />} />
       </Routes>
     </Router>
   );

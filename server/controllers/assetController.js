@@ -34,7 +34,7 @@ export const getAssets = async (req, res) => {
 export const getAssetById = async (req, res) => {
     const { id } = req.params;
     try {
-        const asset = await Asset.findById(id).populate('shop', 'name');
+        const assets = await Asset.find().populate('shop', 'name address info');
         if (!asset) {
             return res.status(404).json({ message: 'Ассет не найден' });
         }
