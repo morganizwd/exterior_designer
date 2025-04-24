@@ -11,7 +11,6 @@ import {
 
 const router = express.Router();
 
-// Валидация проекта
 const plotValidation = [
     body('plot.type').isIn(['Rectangle', 'Polygon']).withMessage('Неверный тип участка'),
     body('plot.width').optional().isNumeric().withMessage('Ширина участка должна быть числом'),
@@ -40,7 +39,6 @@ const idValidation = [
     param('id').isMongoId().withMessage('Неверный формат ID'),
 ];
 
-// Маршруты
 router.post('/', projectValidation, createProject);
 router.get('/', getProjects);
 router.get('/:id', idValidation, getProjectById);

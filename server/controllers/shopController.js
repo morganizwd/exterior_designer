@@ -2,7 +2,6 @@
 import Shop from '../models/Shop.js';
 import { validationResult } from 'express-validator';
 
-// Создание магазина
 export const createShop = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -19,7 +18,6 @@ export const createShop = async (req, res) => {
     }
 };
 
-// Получить список магазинов
 export const getShops = async (req, res) => {
     try {
         const shops = await Shop.find();
@@ -30,7 +28,6 @@ export const getShops = async (req, res) => {
     }
 };
 
-// Получить магазин по ID
 export const getShopById = async (req, res) => {
     const { id } = req.params;
     try {
@@ -45,7 +42,6 @@ export const getShopById = async (req, res) => {
     }
 };
 
-// Обновить магазин
 export const updateShop = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -69,7 +65,6 @@ export const updateShop = async (req, res) => {
     }
 };
 
-// Удалить магазин
 export const deleteShop = async (req, res) => {
     const { id } = req.params;
     try {

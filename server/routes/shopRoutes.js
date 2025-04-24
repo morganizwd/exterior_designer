@@ -14,7 +14,6 @@ import { roleMiddleware } from '../utils/roleMiddleware.js';
 
 const router = express.Router();
 
-// Валидация
 const shopValidation = [
     body('name').trim().notEmpty().withMessage('Название магазина обязательно'),
     body('address').optional().isString().withMessage('Адрес должен быть строкой'),

@@ -2,7 +2,6 @@
 import Asset from '../models/Asset.js';
 import { validationResult } from 'express-validator';
 
-// Создание ассета
 export const createAsset = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -19,7 +18,6 @@ export const createAsset = async (req, res) => {
     }
 };
 
-// Получить все ассеты
 export const getAssets = async (req, res) => {
     try {
         const assets = await Asset.find().populate('shop', 'name');
@@ -30,7 +28,6 @@ export const getAssets = async (req, res) => {
     }
 };
 
-// Получить ассет по ID
 export const getAssetById = async (req, res) => {
     const { id } = req.params;
     try {
@@ -45,7 +42,6 @@ export const getAssetById = async (req, res) => {
     }
 };
 
-// Обновить ассет
 export const updateAsset = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -67,7 +63,6 @@ export const updateAsset = async (req, res) => {
     }
 };
 
-// Удалить ассет
 export const deleteAsset = async (req, res) => {
     const { id } = req.params;
     try {

@@ -7,7 +7,6 @@ import { jwtDecode } from 'jwt-decode';
 export default function Header() {
     const navigate = useNavigate();
 
-    // Попробуем получить токен и декодировать его
     const token = localStorage.getItem('token');
     const user = useMemo(() => {
         if (!token) return null;

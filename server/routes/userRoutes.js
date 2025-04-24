@@ -6,7 +6,6 @@ import { authMiddleware } from '../utils/authMiddleware.js';
 
 const router = express.Router();
 
-// Валидация
 const registerValidation = [
     body('firstName').trim().notEmpty().withMessage('Имя обязательно'),
     body('lastName').trim().notEmpty().withMessage('Фамилия обязательна'),
@@ -20,7 +19,6 @@ const loginValidation = [
 ];
 const idValidation = [param('userId').isMongoId().withMessage('Неверный формат ID')];
 
-// Маршруты
 router.post('/register', registerValidation, register);
 router.post('/login', loginValidation, login);
 router.get('/me', authMiddleware, getMe);

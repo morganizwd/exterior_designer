@@ -20,35 +20,28 @@ export default function LandscapeEditor() {
     const cvsRef = useRef(null);
     const [cvs, setCvs] = useState(null);
 
-    // canvas & assets
     const [assets, setAssets] = useState([]);
     const [plot, setPlot] = useState({ w: 800, h: 600 });
     const [sizeInp, setSizeInp] = useState({ w: 800, h: 600 });
     const [grid, setGrid] = useState(true);
     const [zoom, setZoom] = useState(1);
 
-    // asset filters
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('');
 
-    // project metadata
     const [projectName, setProjectName] = useState(`Проект ${new Date().toLocaleString()}`);
     const [projectDesc, setProjectDesc] = useState('');
 
-    // load projects modal
     const [showLoadModal, setShowLoadModal] = useState(false);
     const [projects, setProjects] = useState([]);
 
-    // selection & properties
     const [sel, setSel] = useState(null);
     const [form, setForm] = useState({ x: 0, y: 0, w: 0, h: 0, a: 0 });
     const [wallLen, setWallLen] = useState(100);
 
-    // pricing & shops
     const [total, setTotal] = useState(0);
     const [shopList, setShopList] = useState([]);
 
-    // user & save status
     const token = localStorage.getItem('token');
     const authConfig = { headers: { Authorization: `Bearer ${token}` } };
     const [userId, setUserId] = useState(null);
@@ -56,7 +49,6 @@ export default function LandscapeEditor() {
     const [success, setSuccess] = useState(null);
     const [saving, setSaving] = useState(false);
 
-    // fetch current user
     useEffect(() => {
         if (!token) return;
         axios.get(`${API}/api/users/me`, authConfig)
@@ -67,20 +59,17 @@ export default function LandscapeEditor() {
             });
     }, [token]);
 
-    // fetch assets
     useEffect(() => {
         axios.get(`${API}/api/assets`)
             .then(({ data }) => setAssets(data))
             .catch(console.error);
     }, []);
 
-    // derive unique categories
     const categories = useMemo(() => {
         const set = new Set(assets.map(a => a.category).filter(Boolean));
         return Array.from(set);
     }, [assets]);
 
-    // filtered assets by search + category
     const filteredAssets = useMemo(() => {
         return assets.filter(a => {
             const matchesName = a.name.toLowerCase().includes(searchTerm.toLowerCase());
@@ -89,7 +78,6 @@ export default function LandscapeEditor() {
         });
     }, [assets, searchTerm, selectedCategory]);
 
-    // draw or redraw grid
     const drawGrid = useCallback(cv => {
         cv.getObjects('line').filter(l => l.gridLine).forEach(l => cv.remove(l));
         if (!grid) { cv.requestRenderAll(); return; }
@@ -115,7 +103,6 @@ export default function LandscapeEditor() {
         cv.requestRenderAll();
     }, [grid, zoom]);
 
-    // recalc price & shop list
     const recalc = useCallback(() => {
         if (!cvs) return;
         const objs = cvs.getObjects().filter(o => o.assetId);
@@ -139,7 +126,6 @@ export default function LandscapeEditor() {
         setShopList(Array.from(shopsMap.values()));
     }, [cvs, assets]);
 
-    // initialize Fabric canvas
     useEffect(() => {
         if (!cvsRef.current) return;
         const cv = new Canvas(cvsRef.current, {
@@ -172,9 +158,8 @@ export default function LandscapeEditor() {
         setCvs(cv);
         drawGrid(cv);
         return () => cv.dispose();
-    }, []); // eslint-disable-line
+    }, []); 
 
-    // redraw grid when needed
     useEffect(() => {
         if (cvs) {
             cvs.setWidth(plot.w);
@@ -184,7 +169,6 @@ export default function LandscapeEditor() {
     }, [plot, drawGrid]);
     useEffect(() => { if (cvs) drawGrid(cvs); }, [grid, zoom]);
 
-    // add asset
     const addAsset = async asset => {
         if (!cvs) return;
         const img = await FabricImage.fromURL(abs(asset.url), { crossOrigin: 'anonymous' });
@@ -197,7 +181,6 @@ export default function LandscapeEditor() {
         recalc();
     };
 
-    // add wall
     const addWall = () => {
         if (!cvs) return;
         const len = Number(wallLen);
@@ -215,7 +198,6 @@ export default function LandscapeEditor() {
         cvs.requestRenderAll();
     };
 
-    // apply property changes
     const applyProps = () => {
         if (!sel) return;
         sel.set({
@@ -230,7 +212,6 @@ export default function LandscapeEditor() {
         recalc();
     };
 
-    // save project
     const handleSaveProject = async () => {
         setError(null);
         setSuccess(null);
@@ -266,12 +247,10 @@ export default function LandscapeEditor() {
         }
     };
 
-    // open load modal & fetch user's projects
     const openLoadModal = () => {
         setError(null);
         axios.get(`${API}/api/projects`, authConfig)
             .then(({ data }) => {
-                // filter to only this user's
                 setProjects(data.filter(p => p.user._id === userId));
                 setShowLoadModal(true);
             })
@@ -282,18 +261,13 @@ export default function LandscapeEditor() {
     };
     const closeLoadModal = () => setShowLoadModal(false);
 
-    // load a selected project
     const loadProject = async project => {
         if (!cvs) return;
-        // clear canvas
         cvs.clear();
-        // apply plot size
         setPlot({ w: project.plot.width, h: project.plot.height });
         setSizeInp({ w: project.plot.width, h: project.plot.height });
-        // set metadata
         setProjectName(project.name);
         setProjectDesc(project.description || '');
-        // add each object
         for (const o of project.objects) {
             const asset = o.asset;
             const img = await FabricImage.fromURL(abs(asset.url), { crossOrigin: 'anonymous' });
@@ -319,7 +293,6 @@ export default function LandscapeEditor() {
             {success && <Alert variant="success">{success}</Alert>}
 
             <Row>
-                {/* Sidebar: поиск и фильтры */}
                 <Col md={3}>
                     <Card>
                         <Card.Header>Ассеты</Card.Header>
@@ -361,7 +334,6 @@ export default function LandscapeEditor() {
                         </Card.Body>
                     </Card>
 
-                    {/* Полотно и стены без изменений */}
                     <Card className="mt-3">
                         <Card.Header>Полотно</Card.Header>
                         <Card.Body>
@@ -405,7 +377,6 @@ export default function LandscapeEditor() {
                     </Card>
                 </Col>
 
-                {/* Canvas & Project Info */}
                 <Col md={6}>
                     <canvas
                         ref={cvsRef}
@@ -440,7 +411,6 @@ export default function LandscapeEditor() {
                     </div>
                 </Col>
 
-                {/* Properties & Summary */}
                 <Col md={3}>
                     <Card>
                         <Card.Header>Свойства / Сводка</Card.Header>
@@ -485,7 +455,6 @@ export default function LandscapeEditor() {
                 </Col>
             </Row>
 
-            {/* Load Projects Modal */}
             <Modal show={showLoadModal} onHide={closeLoadModal} size="lg">
                 <Modal.Header closeButton>
                     <Modal.Title>Загрузить проект</Modal.Title>

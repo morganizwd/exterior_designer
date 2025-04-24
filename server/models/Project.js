@@ -10,7 +10,7 @@ const ProjectSchema = new Schema({
         type: { type: String, enum: ["Rectangle", "Polygon"], default: "Rectangle" },
         width: Number,
         height: Number,
-        points: [{ x: Number, y: Number }]  // используется, если type === 'Polygon'
+        points: [{ x: Number, y: Number }] 
     },
 
     objects: [{

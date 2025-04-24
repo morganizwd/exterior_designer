@@ -8,8 +8,7 @@ const UserSchema = new Schema({
     passwordHash: { type: String, required: true },
     role: { type: String, enum: ["user", "admin"], default: "user" },
 }, {
-    timestamps: true  // automatically adds createdAt, updatedAt
+    timestamps: true  
 });
 
-// индекс на email не обязателен — unique: true уже создаёт его
 export default mongoose.model("User", UserSchema);

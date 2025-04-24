@@ -2,7 +2,6 @@
 import Project from '../models/Project.js';
 import { validationResult } from 'express-validator';
 
-// Создание проекта
 export const createProject = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -19,7 +18,6 @@ export const createProject = async (req, res) => {
     }
 };
 
-// Получить все проекты
 export const getProjects = async (req, res) => {
     try {
         const projects = await Project.find().populate('user', 'firstName lastName').populate('objects.asset');
@@ -30,7 +28,6 @@ export const getProjects = async (req, res) => {
     }
 };
 
-// Получить проект по ID
 export const getProjectById = async (req, res) => {
     const { id } = req.params;
     try {
@@ -45,7 +42,6 @@ export const getProjectById = async (req, res) => {
     }
 };
 
-// Обновить проект
 export const updateProject = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -70,7 +66,6 @@ export const updateProject = async (req, res) => {
     }
 };
 
-// Удалить проект
 export const deleteProject = async (req, res) => {
     const { id } = req.params;
     try {

@@ -3,12 +3,10 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import User from '../models/User.js';
 
-// Регистрация пользователя
 export const register = async (req, res) => {
     try {
         const { firstName, lastName, email, password, role } = req.body;
 
-        // Хешируем пароль
         const salt = await bcrypt.genSalt(10);
         const hash = await bcrypt.hash(password, salt);
 
@@ -22,7 +20,6 @@ export const register = async (req, res) => {
 
         const user = await doc.save();
 
-        // Генерируем токен
         const token = jwt.sign(
             { _id: user._id, role: user.role },
             'secret123',
@@ -40,7 +37,6 @@ export const register = async (req, res) => {
     }
 };
 
-// Вход пользователя
 export const login = async (req, res) => {
     try {
         const { email, password } = req.body;
@@ -68,7 +64,6 @@ export const login = async (req, res) => {
     }
 };
 
-// Получить свои данные
 export const getMe = async (req, res) => {
     try {
         const user = await User.findById(req.userId).select('-passwordHash');
@@ -82,7 +77,6 @@ export const getMe = async (req, res) => {
     }
 };
 
-// Получить пользователя по ID
 export const getUserById = async (req, res) => {
     try {
         const user = await User.findById(req.params.userId).select('-passwordHash');

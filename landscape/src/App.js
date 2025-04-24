@@ -15,7 +15,7 @@ function App() {
         <Route path="/auth" element={<Auth />} />
         <Route path="/admin" element={<AdminPanel />} />
         <Route path="/editor" element={<LandscapeEditor />} />
-        {/* Здесь можно добавить другие маршруты вашего приложения */}
+
         <Route path="/editor" element={<Navigate to="/auth" replace />} />
         <Route path="*" element={<Navigate to="/editor" replace />} />
       </Routes>

@@ -13,7 +13,6 @@ import { roleMiddleware } from '../utils/roleMiddleware.js';
 
 const router = express.Router();
 
-// Валидация ассета
 const assetValidation = [
     body('shop').isMongoId().withMessage('Неверный ID магазина'),
     body('name').trim().notEmpty().withMessage('Название обязательно'),
@@ -26,7 +25,6 @@ const assetValidation = [
 ];
 const idValidation = [param('id').isMongoId().withMessage('Неверный формат ID')];
 
-// Только админ может создавать, обновлять и удалять ассеты
 router.post(
     '/',
     authMiddleware,

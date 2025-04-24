@@ -12,7 +12,7 @@ const AdminPanel = () => {
     const [shops, setShops] = useState([]);
     const [assets, setAssets] = useState([]);
     const [showModal, setShowModal] = useState(false);
-    const [modalMode, setModalMode] = useState('create'); // 'create' или 'edit'
+    const [modalMode, setModalMode] = useState('create'); 
     const [currentItem, setCurrentItem] = useState({});
     const [form, setForm] = useState({});
     const [uploading, setUploading] = useState(false);
@@ -20,14 +20,13 @@ const AdminPanel = () => {
     const token = localStorage.getItem('token');
     const headers = { Authorization: `Bearer ${token}` };
 
-    // Русифицированные категории
     const categories = [
         'Дерево', 'Кустарник', 'Цветок', 'Скамейка', 'Фонтан',
         'Дорожка', 'Газон', 'Фонарь', 'Пруд', 'Статуя',
         'Беседка', 'Забор', 'Камень', 'Мульча', 'Терраса',
         'Детская площадка', 'Мангал', 'Сарай', 'Клумба', 'Шпалера'
     ];
-    // Русифицированные цвета
+
     const colors = [
         { name: 'Красный', value: '#FF0000' },
         { name: 'Оранжевый', value: '#FFA500' },
