@@ -8,6 +8,7 @@ import {
     Button, Form, InputGroup,
     Alert, Spinner, Modal
 } from 'react-bootstrap';
+import { FaTrash } from 'react-icons/fa';
 
 const API = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 const abs = u =>
@@ -158,7 +159,7 @@ export default function LandscapeEditor() {
         setCvs(cv);
         drawGrid(cv);
         return () => cv.dispose();
-    }, []); 
+    }, []);
 
     useEffect(() => {
         if (cvs) {
@@ -286,6 +287,28 @@ export default function LandscapeEditor() {
         recalc();
         closeLoadModal();
     };
+
+    const [deleting, setDeleting] = useState(false)
+
+    const deleteProject = useCallback(
+        id => {
+            if (!window.confirm('Удалить этот проект безвозвратно?')) return;
+            setDeleting(true);
+            setError(null);
+            axios
+                .delete(`${API}/api/projects/${id}`, authConfig)
+                .then(() => {
+                    setProjects(ps => ps.filter(p => p._id !== id));
+                    setSuccess('Проект удалён');
+                })
+                .catch(err => {
+                    console.error('deleteProject error', err);
+                    setError('Не удалось удалить проект');
+                })
+                .finally(() => setDeleting(false));
+        },
+        [authConfig]
+    );
 
     return (
         <Container fluid className="p-3">
@@ -467,13 +490,30 @@ export default function LandscapeEditor() {
                             {projects.map(p => (
                                 <ListGroup.Item
                                     key={p._id}
+                                    className="d-flex justify-content-between align-items-start"
                                     action
                                     onClick={() => loadProject(p)}
                                 >
-                                    <strong>{p.name}</strong><br />
-                                    <small className="text-muted">
-                                        {new Date(p.createdAt).toLocaleString()}
-                                    </small>
+                                    <div style={{ flex: 1 }}>
+                                        <strong>{p.name}</strong><br />
+                                        <small className="text-muted">
+                                            {new Date(p.createdAt).toLocaleString()}
+                                        </small>
+                                    </div>
+
+                                    {/* Кнопка-иконка удаления */}
+                                    <Button
+                                        variant="link"
+                                        className="text-danger p-0 ms-3"
+                                        title="Удалить проект"
+                                        disabled={deleting}
+                                        onClick={e => {
+                                            e.stopPropagation();   // не дать «загрузить» по клику
+                                            deleteProject(p._id);
+                                        }}
+                                    >
+                                        <FaTrash size={16} />
+                                    </Button>
                                 </ListGroup.Item>
                             ))}
                         </ListGroup>
