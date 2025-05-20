@@ -40,6 +40,9 @@ export default function Header() {
                         <Nav.Link as={NavLink} to="/editor">
                             Редактор
                         </Nav.Link>
+                        <Nav.Link as={NavLink} to="/shops">
+                            Магазины
+                        </Nav.Link>
                     </Nav>
                     <Nav>
                         {!user ? (
